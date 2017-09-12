@@ -28,7 +28,7 @@ $(function() {
          it('all url not null ',function(){
             for(let i=0;i<allFeeds.length;i++){
                 expect(allFeeds[i].url).toBeDefined();
-                expect(allFeeds[i].url).not.toBeNull();
+                expect(allFeeds[i].url.length).not.toBe(0);
             }
            
          });
@@ -39,7 +39,7 @@ $(function() {
          it('all names not null',function(){
             for(let i=0;i<allFeeds.length;i++){
                 expect(allFeeds[i].name).toBeDefined();
-                expect(allFeeds[i].name).not.toBeNull(); 
+                expect(allFeeds[i].name.length).not.toBe(0); 
             }
                
          });
@@ -55,7 +55,7 @@ $(function() {
 
          //通过为body添加menu-hidden 类实现隐藏
         it('all menu element default hide',function(){
-            expect($('body').attr('class')).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
 
          /* TODO:
@@ -65,9 +65,9 @@ $(function() {
           */
         it('when click menu btn toggle hide or show',function(){
             $('body').toggleClass('menu-hidden');
-            expect($('body').attr('class')).toBe('');
+            expect($('body').hasClass('menu-hidden')).toBe(false);
             $('body').toggleClass('menu-hidden');
-            expect($('body').attr('class')).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
 
     });
@@ -89,9 +89,8 @@ $(function() {
             loadFeed(0,done);
             
          });
-         it('should be work normal',function(done){
+         it('should be work normal',function(){
              expect($('.feed').html()).not.toBeNull();
-             done();
          })
         
          
@@ -108,17 +107,20 @@ $(function() {
          var old,last;
          beforeEach(function(done){
             
-            loadFeed(0,done);
-            old=$('.feed').html();
-            loadFeed(2,done);
-            last=$('.feed').html();
+            loadFeed(0,function(){                 
+                    old=$('.feed').html();        
+                loadFeed(1,function(){
+                    last=$('.feed').html();
+                    done();
+                    
+                });
+                
+            });
+            
          });
 
-         it('should get new things',function(done){
-            console.log(old);
-            console.log(last);
+         it('should get new things',function(){
             expect(old!==last).toBe(true);
-            done();
          });
     });
         
